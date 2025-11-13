@@ -1,0 +1,12 @@
+*.beam
+*.ez
+*.swp
+.DS_Store
+erl_crash.dump
+zig-cache/
+zig-out/
+_build/
+deps/
+.elixir_ls/
+.fetch
+
