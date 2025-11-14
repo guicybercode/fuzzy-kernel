@@ -17,6 +17,14 @@ defmodule MicrokernelWeb.AuthController do
     end
   end
 
+  def set_session(conn, %{"user_id" => user_id}) do
+    conn
+    |> put_session(:user_id, user_id)
+    |> redirect(to: ~p"/")
+  end
+
+  def set_session(conn, _params), do: redirect(conn, to: ~p"/login")
+
   def logout(conn, _params) do
     conn
     |> clear_session()

@@ -14,14 +14,19 @@ defmodule MicrokernelWeb.AuthLive.Login do
       {:ok, user} ->
         {:noreply,
          socket
-         |> Phoenix.LiveView.put_session(:user_id, user.id)
          |> put_flash(:info, "Logged in successfully")
-         |> redirect(to: ~p"/")}
+         |> push_navigate(to: ~p"/login?user_id=#{user.id}")}
 
       {:error, _reason} ->
         {:noreply, assign(socket, error: "Invalid email or password")}
     end
   end
+
+  def handle_params(%{"user_id" => user_id}, _uri, socket) when is_binary(user_id) do
+    {:noreply, push_navigate(socket, to: ~p"/")}
+  end
+
+  def handle_params(_params, _uri, socket), do: {:noreply, socket}
 
   def render(assigns) do
     ~H"""

@@ -28,6 +28,7 @@ defmodule MicrokernelWeb.Router do
 
     live "/login", AuthLive.Login, :new
     post "/login", AuthController, :login
+    get "/login", AuthController, :set_session
     post "/logout", AuthController, :logout
   end
 

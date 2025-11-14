@@ -24,7 +24,7 @@ defmodule MicrokernelWeb.Endpoint do
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
-  plug Prometheus.PlugExporter
+  plug PrometheusPlug
   plug MicrokernelWeb.Plugs.ErrorHandler
 
   plug Plug.Parsers,
