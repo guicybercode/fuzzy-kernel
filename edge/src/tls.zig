@@ -1,52 +1,58 @@
 const std = @import("std");
 
-pub const TlsContext = struct {
+pub const TLSError = error{
+    InitFailed,
+    HandshakeFailed,
+    ReadFailed,
+    WriteFailed,
+    CertificateError,
+    NotImplemented,
+};
+
+pub const TLSContext = struct {
     allocator: std.mem.Allocator,
-    ca_cert_path: ?[]const u8,
-    client_cert_path: ?[]const u8,
-    client_key_path: ?[]const u8,
-    
-    pub fn init(
-        allocator: std.mem.Allocator,
-        ca_cert: ?[]const u8,
-        client_cert: ?[]const u8,
-        client_key: ?[]const u8,
-    ) !*TlsContext {
-        const ctx = try allocator.create(TlsContext);
-        ctx.* = TlsContext{
+    config: TLSConfig,
+    session: ?*anyopaque,
+
+    pub const TLSConfig = struct {
+        ca_cert_path: ?[]const u8,
+        client_cert_path: ?[]const u8,
+        client_key_path: ?[]const u8,
+        verify_peer: bool,
+    };
+
+    pub fn init(allocator: std.mem.Allocator, config: TLSConfig) !TLSContext {
+        _ = allocator;
+        _ = config;
+        
+        return TLSContext{
             .allocator = allocator,
-            .ca_cert_path = ca_cert,
-            .client_cert_path = client_cert,
-            .client_key_path = client_key,
+            .config = config,
+            .session = null,
         };
-        return ctx;
     }
-    
-    pub fn deinit(self: *TlsContext) void {
-        self.allocator.destroy(self);
-    }
-    
-    pub fn wrapSocket(self: *TlsContext, socket: std.net.Stream) !TlsSocket {
+
+    pub fn deinit(self: *TLSContext) void {
         _ = self;
-        return TlsSocket{
-            .inner = socket,
-        };
+    }
+
+    pub fn connect(self: *TLSContext, socket: std.net.Stream, hostname: []const u8) !void {
+        _ = self;
+        _ = socket;
+        _ = hostname;
+        
+        return error.NotImplemented;
+    }
+
+    pub fn read(self: *TLSContext, buffer: []u8) !usize {
+        _ = self;
+        _ = buffer;
+        return error.NotImplemented;
+    }
+
+    pub fn write(self: *TLSContext, data: []const u8) !usize {
+        _ = self;
+        _ = data;
+        return error.NotImplemented;
     }
 };
-
-pub const TlsSocket = struct {
-    inner: std.net.Stream,
-    
-    pub fn read(self: *TlsSocket, buffer: []u8) !usize {
-        return try self.inner.read(buffer);
-    }
-    
-    pub fn write(self: *TlsSocket, data: []const u8) !usize {
-        return try self.inner.write(data);
-    }
-    
-    pub fn close(self: *TlsSocket) void {
-        self.inner.close();
-    }
-};
-

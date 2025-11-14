@@ -36,7 +36,17 @@ config :tailwind,
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+  metadata: [:request_id, :remote_ip, :user_id, :device_id]
+
+config :logger_json, :backend,
+  formatter: LoggerJSON.Formatters.BasicLogger,
+  metadata: [:request_id, :remote_ip, :user_id, :device_id]
+
+if Mix.env() == :prod do
+  config :logger, backends: [LoggerJSON]
+else
+  config :logger, backends: [:console, LoggerJSON]
+end
 
 config :phoenix, :json_library, Jason
 

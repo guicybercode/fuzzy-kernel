@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microkernel-edge
+  labels:
+    app: microkernel-edge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microkernel-edge
+  template:
+    metadata:
+      labels:
+        app: microkernel-edge
+    spec:
+      containers:
+      - name: edge
+        image: microkernel/edge:latest
+        env:
+        - name: MQTT_BROKER_HOST
+          value: "emqtt-service"
+        - name: MQTT_BROKER_PORT
+          value: "1883"
+        - name: DEVICE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /dev
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev
+

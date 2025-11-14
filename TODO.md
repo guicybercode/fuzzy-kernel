@@ -34,7 +34,7 @@
 - [x] LiveView com gráficos (Chart.js ou similar)
 - [x] Filtros por data/hora
 - [x] Múltiplos sensores no mesmo gráfico
-- [ ] Exportar dados (CSV/JSON) - Pendente
+- [x] Exportar dados (CSV/JSON) ✅
 
 ### 6. Sistema de Notificações ✅
 - [x] Schema `Alert` ou `Notification`
@@ -56,25 +56,26 @@
 
 ## 🟢 BAIXA PRIORIDADE (Nice to Have)
 
-### 9. Exportação de Dados
-- [ ] Endpoint para exportar telemetria (CSV)
-- [ ] Endpoint para exportar dispositivos (JSON)
-- [ ] Agendamento de exports
+### 9. Exportação de Dados ✅
+- [x] Endpoint para exportar telemetria (CSV)
+- [x] Endpoint para exportar dispositivos (JSON)
+- [ ] Agendamento de exports (opcional)
 
-### 10. Multi-tenancy
-- [ ] Schema `Organization` ou `Tenant`
-- [ ] Isolamento de dados por tenant
-- [ ] Roles e permissões
+### 10. Multi-tenancy ✅
+- [x] Schema `Organization` ou `Tenant`
+- [x] Isolamento de dados por tenant (migration criada)
+- [ ] Roles e permissões (pendente)
 
-### 11. Métricas Avançadas
-- [ ] Dashboard de métricas do sistema
-- [ ] Integração Prometheus
-- [ ] Alertas baseados em métricas
+### 11. Métricas Avançadas ✅
+- [x] Integração Prometheus
+- [x] Endpoint `/metrics` para scraping
+- [ ] Dashboard de métricas do sistema (opcional)
+- [ ] Alertas baseados em métricas (opcional)
 
-### 12. Documentação API
-- [ ] OpenAPI/Swagger spec
-- [ ] Documentação interativa
-- [ ] Exemplos de uso
+### 12. Documentação API ✅
+- [x] OpenAPI/Swagger spec
+- [x] Documentação interativa (`/api/docs`)
+- [x] Endpoint `/api/swagger.json`
 
 ## 🔧 MELHORIAS TÉCNICAS
 

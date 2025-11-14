@@ -71,7 +71,11 @@ defmodule Microkernel.MixProject do
       {:prometheus_ex, "~> 3.1"},
       {:prometheus_plugs, "~> 1.1"},
       {:prometheus_ecto, "~> 1.1"},
-      {:open_api_spex, "~> 3.18"}
+      {:open_api_spex, "~> 3.18"},
+      {:sentry, "~> 9.0"},
+      {:logger_json, "~> 5.0"},
+      {:benchee, "~> 1.0", only: :dev},
+      {:benchee_html, "~> 1.0", only: :dev}
     ]
   end
 
@@ -86,7 +90,8 @@ defmodule Microkernel.MixProject do
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       quality: ["credo --strict", "dialyzer", "test"],
-      "format.check": ["format --check-formatted"]
+      "format.check": ["format --check-formatted"],
+      "bench": ["run benchmarks/telemetry_bench.exs", "run benchmarks/device_registry_bench.exs"]
     ]
   end
 end

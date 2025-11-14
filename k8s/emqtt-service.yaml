@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqtt-service
+spec:
+  ports:
+  - port: 1883
+    targetPort: 1883
+    name: mqtt
+  - port: 8083
+    targetPort: 8083
+    name: mqtts
+  - port: 8084
+    targetPort: 8084
+    name: ws
+  - port: 18083
+    targetPort: 18083
+    name: dashboard
+  selector:
+    app: emqtt
+

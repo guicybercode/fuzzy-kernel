@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emqtt
+  labels:
+    app: emqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emqtt
+  template:
+    metadata:
+      labels:
+        app: emqtt
+    spec:
+      containers:
+      - name: emqtt
+        image: emqx/emqx:latest
+        ports:
+        - containerPort: 1883
+          name: mqtt
+        - containerPort: 8083
+          name: mqtts
+        - containerPort: 8084
+          name: ws
+        - containerPort: 18083
+          name: dashboard
+        env:
+        - name: EMQX_NAME
+          value: "emqx"
+        - name: EMQX_HOST
+          value: "emqtt-service"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+

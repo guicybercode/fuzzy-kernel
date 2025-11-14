@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microkernel-server
+  labels:
+    app: microkernel-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: microkernel-server
+  template:
+    metadata:
+      labels:
+        app: microkernel-server
+    spec:
+      containers:
+      - name: server
+        image: microkernel/server:latest
+        ports:
+        - containerPort: 4000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: microkernel-secrets
+              key: database-url
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: microkernel-secrets
+              key: secret-key-base
+        - name: MQTT_HOST
+          value: "emqtt-service"
+        - name: MQTT_PORT
+          value: "1883"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
