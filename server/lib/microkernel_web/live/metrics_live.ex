@@ -1,6 +1,5 @@
 defmodule MicrokernelWeb.MetricsLive do
   use MicrokernelWeb, :live_view
-  alias Microkernel.PrometheusExporter
 
   def mount(_params, _session, socket) do
     if connected?(socket) do
@@ -14,8 +13,12 @@ defmodule MicrokernelWeb.MetricsLive do
   end
 
   defp get_metrics do
-    metrics_text = Prometheus.Format.Text.format()
-    parse_metrics(metrics_text)
+    try do
+      metrics_text = Prometheus.Format.Text.format()
+      parse_metrics(metrics_text)
+    rescue
+      _ -> %{}
+    end
   end
 
   defp parse_metrics(text) do
@@ -23,7 +26,10 @@ defmodule MicrokernelWeb.MetricsLive do
     Enum.reduce(lines, %{}, fn line, acc ->
       case String.split(line, " ") do
         [name, value] ->
-          Map.put(acc, name, String.to_float(value))
+          case Float.parse(value) do
+            {float_value, _} -> Map.put(acc, name, float_value)
+            :error -> acc
+          end
         _ ->
           acc
       end

@@ -1,8 +1,12 @@
 defmodule MicrokernelWeb.AuthLive.Login do
   use MicrokernelWeb, :live_view
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, email: "", password: "", error: nil)}
+  def mount(_params, session, socket) do
+    if session["user_id"] do
+      {:ok, redirect(socket, to: ~p"/")}
+    else
+      {:ok, assign(socket, email: "", password: "", error: nil)}
+    end
   end
 
   def handle_event("login", %{"email" => email, "password" => password}, socket) do
@@ -10,6 +14,7 @@ defmodule MicrokernelWeb.AuthLive.Login do
       {:ok, user} ->
         {:noreply,
          socket
+         |> put_session(:user_id, user.id)
          |> put_flash(:info, "Logged in successfully")
          |> redirect(to: ~p"/")}
 

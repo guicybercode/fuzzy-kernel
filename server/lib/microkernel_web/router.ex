@@ -26,7 +26,7 @@ defmodule MicrokernelWeb.Router do
   scope "/", MicrokernelWeb do
     pipe_through :browser
 
-    get "/login", AuthLive.Login, :new
+    live "/login", AuthLive.Login, :new
     post "/login", AuthController, :login
     post "/logout", AuthController, :logout
   end
