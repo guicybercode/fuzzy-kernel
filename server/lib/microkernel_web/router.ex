@@ -10,6 +10,14 @@ defmodule MicrokernelWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :require_auth do
+    plug MicrokernelWeb.Plugs.EnsureAuth
+  end
+
+  pipeline :require_admin do
+    plug MicrokernelWeb.Plugs.Authorize, roles: ["admin"]
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug MicrokernelWeb.Plugs.Auth
@@ -18,9 +26,18 @@ defmodule MicrokernelWeb.Router do
   scope "/", MicrokernelWeb do
     pipe_through :browser
 
+    get "/login", AuthLive.Login, :new
+    post "/login", AuthController, :login
+    post "/logout", AuthController, :logout
+  end
+
+  scope "/", MicrokernelWeb do
+    pipe_through [:browser, :require_auth]
+
     live "/", DeviceLive.Index, :index
     live "/devices/:id", DeviceLive.Show, :show
     live "/devices/:id/charts", DeviceLive.Charts, :charts
+    live "/metrics", MetricsLive, :index
   end
 
   scope "/api", MicrokernelWeb.Api, as: :api do

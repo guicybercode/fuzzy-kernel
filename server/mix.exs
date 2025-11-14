@@ -75,7 +75,8 @@ defmodule Microkernel.MixProject do
       {:sentry, "~> 9.0"},
       {:logger_json, "~> 5.0"},
       {:benchee, "~> 1.0", only: :dev},
-      {:benchee_html, "~> 1.0", only: :dev}
+      {:benchee_html, "~> 1.0", only: :dev},
+      {:argon2_elixir, "~> 3.0"}
     ]
   end
 

@@ -19,6 +19,10 @@ defmodule Microkernel.Alerts do
     GenServer.cast(__MODULE__, {:check_telemetry, device_id, sensor_type, value})
   end
 
+  def check_prometheus_metrics(metric_name, value, threshold, condition) do
+    GenServer.cast(__MODULE__, {:check_metrics, metric_name, value, threshold, condition})
+  end
+
   @impl true
   def handle_cast({:check_telemetry, device_id, sensor_type, value}, state) do
     alerts = Repo.all(
@@ -31,6 +35,23 @@ defmodule Microkernel.Alerts do
     Enum.each(alerts, fn alert ->
       if Alert.check_condition(alert, value) do
         trigger_alert(alert, device_id, sensor_type, value)
+      end
+    end)
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:check_metrics, metric_name, value, threshold, condition}, state) do
+    alerts = Repo.all(
+      from a in Alert,
+      where: a.sensor_type == ^metric_name,
+      where: a.enabled == true
+    )
+
+    Enum.each(alerts, fn alert ->
+      if Alert.check_condition(alert, value) do
+        trigger_metric_alert(alert, metric_name, value)
       end
     end)
 
