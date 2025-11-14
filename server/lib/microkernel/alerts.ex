@@ -82,8 +82,8 @@ defmodule Microkernel.Alerts do
     }
 
     Task.start(fn ->
-      case Finch.build(:post, alert.webhook_url, [{"Content-Type", "application/json"}], Jason.encode!(payload))
-          |> Finch.request(Microkernel.Finch) do
+      request = Finch.build(:post, alert.webhook_url, [{"Content-Type", "application/json"}], Jason.encode!(payload))
+      case Finch.request(request, Microkernel.Finch) do
         {:ok, %{status: status}} when status in 200..299 ->
           Logger.info("Webhook sent successfully for alert #{alert.id}")
         {:ok, %{status: status}} ->

@@ -1,5 +1,6 @@
 defmodule MicrokernelWeb.CoreComponents do
   use Phoenix.Component
+  alias Phoenix.LiveView.JS
 
   attr :id, :string, required: true
   attr :show, :boolean, default: false
@@ -41,6 +42,25 @@ defmodule MicrokernelWeb.CoreComponents do
     <button class={"phx-submit-loading:opacity-75 rounded-lg bg-blue-600 hover:bg-blue-700 py-2 px-3 text-sm font-semibold leading-6 text-white active:text-white/80 #{@class}"}>
       <%= render_slot(@inner_block) %>
     </button>
+    """
+  end
+
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+
+  def flash_group(assigns) do
+    ~H"""
+    <div
+      :for={{kind, message} <- @flash}
+      :if={message != nil}
+      class={[
+        "rounded-lg p-3 mb-4",
+        kind == :info && "bg-blue-50 text-blue-800",
+        kind == :error && "bg-red-50 text-red-800"
+      ]}
+      role="alert"
+    >
+      <p class="font-medium"><%= message %></p>
+    </div>
     """
   end
 end

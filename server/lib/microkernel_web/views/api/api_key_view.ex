@@ -2,7 +2,7 @@ defmodule MicrokernelWeb.Api.ApiKeyView do
   use MicrokernelWeb, :view
 
   def render("index.json", %{keys: keys}) do
-    %{data: render_many(keys, __MODULE__, "api_key.json")}
+    %{data: Enum.map(keys, &render("api_key.json", %{api_key: &1}))}
   end
 
   def render("show.json", %{key: key, name: name}) do

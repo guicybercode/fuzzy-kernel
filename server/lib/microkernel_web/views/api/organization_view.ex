@@ -2,11 +2,11 @@ defmodule MicrokernelWeb.Api.OrganizationView do
   use MicrokernelWeb, :view
 
   def render("index.json", %{organizations: organizations}) do
-    %{data: render_many(organizations, __MODULE__, "organization.json")}
+    %{data: Enum.map(organizations, &render("organization.json", %{organization: &1}))}
   end
 
   def render("show.json", %{organization: organization}) do
-    %{data: render_one(organization, __MODULE__, "organization.json")}
+    %{data: render("organization.json", %{organization: organization})}
   end
 
   def render("organization.json", %{organization: organization}) do

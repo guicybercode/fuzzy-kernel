@@ -2,11 +2,11 @@ defmodule MicrokernelWeb.Api.TelemetryView do
   use MicrokernelWeb, :view
 
   def render("index.json", %{readings: readings}) do
-    %{data: render_many(readings, __MODULE__, "reading.json")}
+    %{data: Enum.map(readings, &render("reading.json", %{reading: &1}))}
   end
 
   def render("show.json", %{reading: reading}) do
-    %{data: render_one(reading, __MODULE__, "reading.json")}
+    %{data: render("reading.json", %{reading: reading})}
   end
 
   def render("reading.json", %{reading: reading}) do

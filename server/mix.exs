@@ -57,6 +57,8 @@ defmodule Microkernel.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:emqtt, "~> 1.8"},
+      {:quicer, "~> 0.0", optional: true},
+      {:snabbkaffe, "~> 1.0", optional: true},
       {:finch, "~> 0.16"},
       {:mox, "~> 1.0", only: :test},
       {:bypass, "~> 2.1", only: :test},
@@ -67,7 +69,6 @@ defmodule Microkernel.MixProject do
       {:oban, "~> 2.17"},
       {:timex, "~> 3.7"},
       {:prometheus_ex, "~> 3.1"},
-      {:prometheus_phoenix, "~> 1.3"},
       {:prometheus_plugs, "~> 1.1"},
       {:prometheus_ecto, "~> 1.1"},
       {:open_api_spex, "~> 3.18"}
@@ -84,7 +85,7 @@ defmodule Microkernel.MixProject do
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
-      "quality": ["credo --strict", "dialyzer", "test"],
+      quality: ["credo --strict", "dialyzer", "test"],
       "format.check": ["format --check-formatted"]
     ]
   end

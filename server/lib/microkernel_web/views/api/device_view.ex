@@ -2,11 +2,11 @@ defmodule MicrokernelWeb.Api.DeviceView do
   use MicrokernelWeb, :view
 
   def render("index.json", %{devices: devices}) do
-    %{data: render_many(devices, __MODULE__, "device.json")}
+    %{data: Enum.map(devices, &render("device.json", %{device: &1}))}
   end
 
   def render("show.json", %{device: device}) do
-    %{data: render_one(device, __MODULE__, "device.json")}
+    %{data: render("device.json", %{device: device})}
   end
 
   def render("device.json", %{device: device}) do

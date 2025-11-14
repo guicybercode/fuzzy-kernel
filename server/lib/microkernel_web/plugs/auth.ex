@@ -1,5 +1,6 @@
 defmodule MicrokernelWeb.Plugs.Auth do
   import Plug.Conn
+  import Ecto.Query
   require Logger
   alias Microkernel.Repo
   alias Microkernel.Auth.ApiKey
