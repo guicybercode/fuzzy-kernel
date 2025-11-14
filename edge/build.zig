@@ -13,11 +13,11 @@ pub fn build(b: *std.Build) void {
 
     const exe = b.addExecutable(.{
         .name = "microkernel-edge",
-        .root_source_file = .{ .path = "src/main.zig" },
-        .target = target,
-        .optimize = optimize,
     });
-
+    
+    exe.addFile(.{ .path = "src/main.zig" });
+    exe.setTarget(target);
+    exe.setOptimizeMode(optimize);
     exe.linkLibC();
     
     b.installArtifact(exe);
@@ -32,4 +32,3 @@ pub fn build(b: *std.Build) void {
     const run_step = b.step("run", "Run the application");
     run_step.dependOn(&run_cmd.step);
 }
-
