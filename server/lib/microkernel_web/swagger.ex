@@ -2,7 +2,7 @@ defmodule MicrokernelWeb.Swagger do
   @moduledoc """
   OpenAPI/Swagger specification for Microkernel API
   """
-  alias OpenApiSpex.{OpenApi, Info, Paths, PathItem, Operation, Response, Schema, Parameter, Components, SecurityScheme, Server}
+  alias OpenApiSpex.{OpenApi, Info, PathItem, Operation, Response, Schema, Parameter, Components, SecurityScheme, Server}
 
   def spec do
     %OpenApi{

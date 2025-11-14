@@ -1,7 +1,10 @@
 defmodule MicrokernelWeb.Plugs.EnsureAuth do
   import Plug.Conn
   import Phoenix.Controller
-  alias Microkernel.Users.User
+  use Phoenix.VerifiedRoutes,
+    endpoint: MicrokernelWeb.Endpoint,
+    router: MicrokernelWeb.Router,
+    statics: MicrokernelWeb.static_paths()
 
   def init(opts), do: opts
 

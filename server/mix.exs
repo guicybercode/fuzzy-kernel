@@ -92,7 +92,7 @@ defmodule Microkernel.MixProject do
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       quality: ["credo --strict", "dialyzer", "test"],
       "format.check": ["format --check-formatted"],
-      "bench": ["run benchmarks/telemetry_bench.exs", "run benchmarks/device_registry_bench.exs"]
+      bench: ["run benchmarks/telemetry_bench.exs", "run benchmarks/device_registry_bench.exs"]
     ]
   end
 end

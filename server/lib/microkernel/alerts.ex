@@ -42,7 +42,7 @@ defmodule Microkernel.Alerts do
   end
 
   @impl true
-  def handle_cast({:check_metrics, metric_name, value, threshold, condition}, state) do
+  def handle_cast({:check_metrics, metric_name, value, _threshold, _condition}, state) do
     alerts = Repo.all(
       from a in Alert,
       where: a.sensor_type == ^metric_name,

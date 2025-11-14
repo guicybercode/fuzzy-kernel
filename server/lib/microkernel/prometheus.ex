@@ -4,7 +4,7 @@ defmodule Microkernel.Prometheus do
   """
   use Prometheus.PlugExporter
 
-  def setup do
+  def init_metrics do
     Prometheus.Registry.register_collector(:prometheus_process_collector)
     Prometheus.Registry.register_collector(:prometheus_mnesia_collector)
     :ok

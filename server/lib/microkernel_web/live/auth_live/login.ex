@@ -14,7 +14,7 @@ defmodule MicrokernelWeb.AuthLive.Login do
       {:ok, user} ->
         {:noreply,
          socket
-         |> put_session(:user_id, user.id)
+         |> Phoenix.LiveView.put_session(:user_id, user.id)
          |> put_flash(:info, "Logged in successfully")
          |> redirect(to: ~p"/")}
 
