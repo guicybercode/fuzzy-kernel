@@ -90,6 +90,37 @@ defmodule Microkernel.Alerts do
     end
   end
 
+  defp trigger_metric_alert(alert, metric_name, value) do
+    Logger.warning("Metric alert triggered: #{alert.name} for metric #{metric_name}")
+    
+    attrs = %{
+      last_triggered_at: DateTime.utc_now(),
+      trigger_count: alert.trigger_count + 1
+    }
+
+    case Repo.update(Alert.changeset(alert, attrs)) do
+      {:ok, _} ->
+        Phoenix.PubSub.broadcast(
+          Microkernel.PubSub,
+          "alerts:metrics",
+          {:metric_alert_triggered, %{
+            alert_id: alert.id,
+            name: alert.name,
+            metric_name: metric_name,
+            value: value,
+            threshold: alert.threshold_value,
+            condition: alert.condition
+          }}
+        )
+
+        if alert.webhook_url do
+          send_webhook(alert, nil, metric_name, value)
+        end
+      {:error, _} ->
+        :ok
+    end
+  end
+
   defp send_webhook(alert, device_id, sensor_type, value) do
     payload = %{
       alert_id: alert.id,
