@@ -11,13 +11,17 @@ pub fn build(b: *std.Build) void {
 
     const optimize = b.standardOptimizeOption(.{});
 
+    const root_module = b.addModule("root", .{
+        .root_source_file = .{ .path = "src/main.zig" },
+    });
+
     const exe = b.addExecutable(.{
         .name = "microkernel-edge",
+        .root_module = root_module,
+        .target = target,
+        .optimize = optimize,
     });
     
-    exe.addFile(.{ .path = "src/main.zig" });
-    exe.setTarget(target);
-    exe.setOptimizeMode(optimize);
     exe.linkLibC();
     
     b.installArtifact(exe);
