@@ -7,7 +7,30 @@ cd "$PROJECT_ROOT/edge"
 
 echo "🔨 Building edge device (Zig)..."
 
-TARGET="${1:-arm-linux-gnueabihf}"
+# Auto-detect target if not provided
+if [ -z "$1" ]; then
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        armv7l|armv6l)
+            TARGET="arm-linux-gnueabihf"
+            echo "  Auto-detected: ARMv7 (Raspberry Pi 2/3/Zero)"
+            ;;
+        aarch64)
+            TARGET="aarch64-linux-gnu"
+            echo "  Auto-detected: ARM64 (Raspberry Pi 4/5)"
+            ;;
+        x86_64)
+            TARGET="x86_64-linux-gnu"
+            echo "  Auto-detected: x86_64 (cross-compilation)"
+            ;;
+        *)
+            TARGET="arm-linux-gnueabihf"
+            echo "  Default target: arm-linux-gnueabihf"
+            ;;
+    esac
+else
+    TARGET="$1"
+fi
 
 echo "  Target: $TARGET"
 echo ""
