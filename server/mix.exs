@@ -9,7 +9,21 @@ defmodule Microkernel.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      description: "Distributed IoT Microkernel Platform - Zig edge + Elixir server",
+      package: [
+        maintainers: ["Microkernel Team"],
+        licenses: ["MIT"],
+        links: %{"GitHub" => "https://github.com/guicybercode/fuzzy-kernel"}
+      ],
+      docs: [
+        main: "Microkernel",
+        extras: ["README.md"],
+        groups_for_extras: [
+          "Getting Started": ~r/docs\/getting_started/,
+          "Guides": ~r/docs\/guides/
+        ]
+      ]
     ]
   end
 
@@ -43,7 +57,15 @@ defmodule Microkernel.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:emqtt, "~> 1.8"},
-      {:finch, "~> 0.16"}
+      {:finch, "~> 0.16"},
+      {:mox, "~> 1.0", only: :test},
+      {:bypass, "~> 2.1", only: :test},
+      {:ex_machina, "~> 2.7", only: :test},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
+      {:oban, "~> 2.17"},
+      {:timex, "~> 3.7"}
     ]
   end
 
@@ -53,9 +75,12 @@ defmodule Microkernel.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "test.watch": ["test.watch --stale"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      "quality": ["credo --strict", "dialyzer", "test"],
+      "format.check": ["format --check-formatted"]
     ]
   end
 end

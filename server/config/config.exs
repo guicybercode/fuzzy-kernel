@@ -40,5 +40,16 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
+config :oban,
+  engine: Oban.Engines.Basic,
+  queues: [default: 10, ota: 5, telemetry: 20],
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: 3600},
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"0 * * * *", Microkernel.Jobs.HealthCheckJob}
+     ]}
+  ]
+
 import_config "#{config_env()}.exs"
 

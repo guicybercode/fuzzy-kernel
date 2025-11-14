@@ -12,7 +12,8 @@ defmodule Microkernel.Application do
       {Microkernel.Devices.Supervisor, []},
       {Microkernel.MQTT.Subscriber, []},
       {Microkernel.Telemetry, []},
-      {Microkernel.OTA.Updater, []}
+      {Microkernel.OTA.Updater, []},
+      Oban
     ]
 
     opts = [strategy: :one_for_one, name: Microkernel.Supervisor]

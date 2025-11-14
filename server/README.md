@@ -1,50 +1,57 @@
-# Server (Elixir/Phoenix)
+# Microkernel Server
 
-This directory contains the Elixir-based control server with Phoenix LiveView dashboard.
+Elixir/Phoenix control server for the Distributed IoT Microkernel Platform.
+
+## Quick Start
+
+```bash
+mix setup
+mix phx.server
+```
 
 ## Features
 
 - Phoenix LiveView real-time dashboard
 - EMQ X MQTT broker integration
-- Device registry and management
-- OTA firmware updates
+- Device registry and health monitoring
+- OTA firmware updates with Oban jobs
 - Real-time telemetry visualization
 - PostgreSQL database persistence
 
-## Setup
+## Development
 
-1. Install dependencies:
+### Setup
+
 ```bash
 mix deps.get
-```
-
-2. Create and migrate database:
-```bash
 mix ecto.create
 mix ecto.migrate
+mix assets.setup
 ```
 
-3. Install Node.js dependencies:
+### Testing
+
 ```bash
-cd assets && npm install && cd ..
+mix test
+mix test.watch
 ```
 
-4. Start server:
+### Code Quality
+
 ```bash
-mix phx.server
+mix quality          # Runs credo, dialyzer, and tests
+mix credo            # Static analysis
+mix dialyzer         # Type checking
+mix format           # Format code
+mix format.check     # Check formatting
 ```
 
-Server runs at: http://localhost:4000
+### Documentation
 
-## Configuration
-
-Edit `config/dev.exs` for development settings.
-
-Environment variables:
-- `DATABASE_URL` - PostgreSQL connection URL
-- `MQTT_HOST` - MQTT broker hostname
-- `MQTT_PORT` - MQTT broker port
-- `SECRET_KEY_BASE` - Phoenix secret key
+```bash
+mix docs             # Generate HTML docs
+mix docs --open      # Open in browser
+```
 
 ## Architecture
 
@@ -60,8 +67,11 @@ lib/
 │   │   ├── device.ex      - Device schema
 │   │   ├── registry.ex    - Device management
 │   │   └── supervisor.ex  - Process supervision
-│   └── ota/
-│       └── updater.ex     - OTA update system
+│   ├── ota/
+│   │   └── updater.ex     - OTA update system
+│   └── jobs/
+│       ├── ota_job.ex     - OTA background job
+│       └── health_check_job.ex - Device health check
 └── microkernel_web/
     ├── endpoint.ex        - Phoenix endpoint
     ├── router.ex          - Routes
@@ -69,16 +79,22 @@ lib/
         └── device_live/   - LiveView pages
 ```
 
-## Testing
+## Configuration
 
-```bash
-mix test
-```
+Environment variables:
+- `DATABASE_URL` - PostgreSQL connection URL
+- `MQTT_HOST` - MQTT broker hostname
+- `MQTT_PORT` - MQTT broker port
+- `SECRET_KEY_BASE` - Phoenix secret key
 
-## Production
+## Oban Jobs
 
-```bash
-MIX_ENV=prod mix do compile, assets.deploy
-MIX_ENV=prod mix release
-```
+Background jobs are configured in `config/config.exs`:
 
+- `ota` queue - Firmware update jobs
+- `telemetry` queue - Telemetry processing
+- `default` queue - General jobs
+
+## License
+
+MIT
