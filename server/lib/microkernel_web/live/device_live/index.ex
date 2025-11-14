@@ -120,7 +120,9 @@ defmodule MicrokernelWeb.DeviceLive.Index do
 
   defp format_datetime(nil), do: "Never"
   defp format_datetime(datetime) do
-    Calendar.strftime(datetime, "%Y-%m-%d %H:%M:%S")
+    datetime
+    |> DateTime.truncate(:second)
+    |> DateTime.to_string()
   end
 end
 

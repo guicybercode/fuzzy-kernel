@@ -72,12 +72,31 @@ pub const MqttClient = struct {
         const stream = try std.net.tcpConnectToAddress(address);
         
         if (self.use_tls) {
-            
+            return error.TlsNotImplemented;
         }
         
         self.socket = stream;
         
         try self.sendConnectPacket();
+        
+        var connack_buffer: [4]u8 = undefined;
+        const connack_read = try self.socket.?.read(&connack_buffer);
+        if (connack_read < 4) {
+            return error.InvalidConnack;
+        }
+        
+        if (connack_buffer[0] != 0x20) {
+            return error.InvalidConnack;
+        }
+        
+        if (connack_buffer[1] != 2) {
+            return error.InvalidConnack;
+        }
+        
+        const return_code = connack_buffer[3];
+        if (return_code != 0) {
+            return error.ConnectionRefused;
+        }
         
         self.state = .Connected;
         self.current_reconnect_delay_ms = self.reconnect_delay_ms;
@@ -151,8 +170,8 @@ pub const MqttClient = struct {
         try writer.writeByte(0x10);
         
         const client_id_len: u16 = @intCast(self.client_id.len);
-        const remaining_length: u8 = @intCast(10 + 2 + client_id_len);
-        try writer.writeByte(remaining_length);
+        const remaining_length: u32 = 10 + 2 + client_id_len;
+        try self.writeRemainingLength(writer, remaining_length);
         
         try writer.writeInt(u16, 4, .big);
         try writer.writeAll("MQTT");
@@ -202,8 +221,8 @@ pub const MqttClient = struct {
         try writer.writeByte(0x82);
         
         const topic_len: u16 = @intCast(topic.len);
-        const remaining_length: u16 = 2 + 2 + topic_len + 1;
-        try writer.writeByte(@intCast(remaining_length));
+        const remaining_length: u32 = 2 + 2 + topic_len + 1;
+        try self.writeRemainingLength(writer, remaining_length);
         
         try writer.writeInt(u16, 1, .big);
         
@@ -217,13 +236,22 @@ pub const MqttClient = struct {
     fn writeRemainingLength(self: *MqttClient, writer: anytype, length: u32) !void {
         _ = self;
         var len = length;
+        var encoded: [4]u8 = undefined;
+        var count: usize = 0;
+        
         while (len > 0) {
             var byte: u8 = @intCast(len % 128);
             len = len / 128;
             if (len > 0) {
                 byte |= 0x80;
             }
-            try writer.writeByte(byte);
+            encoded[count] = byte;
+            count += 1;
+            if (count >= 4) break;
+        }
+        
+        for (encoded[0..count]) |b| {
+            try writer.writeByte(b);
         }
     }
     
@@ -231,13 +259,60 @@ pub const MqttClient = struct {
         if (self.state != .Connected or self.socket == null) return;
         
         var buffer: [4096]u8 = undefined;
-        const bytes_read = try self.socket.?.read(&buffer);
+        const bytes_read = self.socket.?.read(&buffer) catch |err| {
+            if (err == error.WouldBlock) return;
+            try self.reconnect();
+            return;
+        };
         
         if (bytes_read == 0) {
             try self.reconnect();
             return;
         }
         
+        if (bytes_read < 2) return;
+        
+        const message_type = (buffer[0] >> 4) & 0x0F;
+        
+        if (message_type == 3) {
+            const remaining_length = try self.readRemainingLength(buffer[1..]);
+            if (bytes_read < remaining_length + 2) return;
+            
+            var pos: usize = 2;
+            const topic_len = std.mem.readInt(u16, buffer[pos..pos+2], .big);
+            pos += 2;
+            
+            if (bytes_read < pos + topic_len) return;
+            const topic = buffer[pos..pos+topic_len];
+            pos += topic_len;
+            
+            if (bytes_read < pos + 2) return;
+            const packet_id = std.mem.readInt(u16, buffer[pos..pos+2], .big);
+            pos += 2;
+            
+            if (bytes_read < pos) return;
+            const payload = buffer[pos..bytes_read];
+            _ = packet_id;
+            _ = topic;
+            _ = payload;
+        }
+    }
+    
+    fn readRemainingLength(self: *MqttClient, buffer: []const u8) !u32 {
+        _ = self;
+        var multiplier: u32 = 1;
+        var value: u32 = 0;
+        var pos: usize = 0;
+        
+        while (pos < buffer.len and pos < 4) {
+            const byte = buffer[pos];
+            value += (byte & 0x7F) * multiplier;
+            multiplier *= 128;
+            pos += 1;
+            if ((byte & 0x80) == 0) break;
+        }
+        
+        return value;
     }
     
     pub fn flushQueue(self: *MqttClient) !void {

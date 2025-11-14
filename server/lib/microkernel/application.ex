@@ -11,7 +11,8 @@ defmodule Microkernel.Application do
       MicrokernelWeb.Endpoint,
       {Microkernel.Devices.Supervisor, []},
       {Microkernel.MQTT.Subscriber, []},
-      {Microkernel.Telemetry, []}
+      {Microkernel.Telemetry, []},
+      {Microkernel.OTA.Updater, []}
     ]
 
     opts = [strategy: :one_for_one, name: Microkernel.Supervisor]

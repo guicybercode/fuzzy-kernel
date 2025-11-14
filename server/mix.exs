@@ -42,7 +42,8 @@ defmodule Microkernel.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
-      {:emqtt, "~> 1.8"}
+      {:emqtt, "~> 1.8"},
+      {:finch, "~> 0.16"}
     ]
   end
 

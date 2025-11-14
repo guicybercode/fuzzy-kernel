@@ -14,19 +14,28 @@ pub const Config = struct {
     sensor_poll_interval_ms: u64,
     
     pub fn loadFromEnv(allocator: std.mem.Allocator) !Config {
-        const device_id = std.process.getEnvVarOwned(allocator, "DEVICE_ID") catch "device-001";
-        const mqtt_host = std.process.getEnvVarOwned(allocator, "MQTT_BROKER_HOST") catch "localhost";
-        const mqtt_port = std.process.getEnvVarOwned(allocator, "MQTT_BROKER_PORT") catch "1883";
-        const port = try std.fmt.parseInt(u16, mqtt_port, 10);
+        _ = allocator;
+        const device_id_env = std.process.getEnvVar("DEVICE_ID") catch null;
+        const device_id = if (device_id_env) |id| id else "device-001";
+        
+        const mqtt_host_env = std.process.getEnvVar("MQTT_BROKER_HOST") catch null;
+        const mqtt_host = if (mqtt_host_env) |host| host else "localhost";
+        
+        const mqtt_port_env = std.process.getEnvVar("MQTT_BROKER_PORT") catch null;
+        const mqtt_port_str = if (mqtt_port_env) |port| port else "1883";
+        const port = try std.fmt.parseInt(u16, mqtt_port_str, 10);
+        
+        const use_tls_env = std.process.getEnvVar("MQTT_USE_TLS") catch null;
+        const use_tls = if (use_tls_env) |val| std.mem.eql(u8, val, "true") else false;
         
         return Config{
             .device_id = device_id,
             .mqtt_broker_host = mqtt_host,
             .mqtt_broker_port = port,
-            .mqtt_use_tls = true,
-            .mqtt_ca_cert_path = std.process.getEnvVarOwned(allocator, "MQTT_CA_CERT") catch null,
-            .mqtt_client_cert_path = std.process.getEnvVarOwned(allocator, "MQTT_CLIENT_CERT") catch null,
-            .mqtt_client_key_path = std.process.getEnvVarOwned(allocator, "MQTT_CLIENT_KEY") catch null,
+            .mqtt_use_tls = use_tls,
+            .mqtt_ca_cert_path = null,
+            .mqtt_client_cert_path = null,
+            .mqtt_client_key_path = null,
             .reconnect_interval_ms = 1000,
             .max_reconnect_interval_ms = 60000,
             .cache_dir = "/var/lib/microkernel",

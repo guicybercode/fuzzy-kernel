@@ -182,7 +182,9 @@ defmodule MicrokernelWeb.DeviceLive.Show do
 
   defp format_datetime(nil), do: "Never"
   defp format_datetime(datetime) when is_struct(datetime, DateTime) do
-    Calendar.strftime(datetime, "%Y-%m-%d %H:%M:%S")
+    datetime
+    |> DateTime.truncate(:second)
+    |> DateTime.to_string()
   end
   defp format_datetime(_), do: "Invalid"
 end

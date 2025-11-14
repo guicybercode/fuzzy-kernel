@@ -144,11 +144,6 @@ pub fn main() !void {
 
         loop_count += 1;
         std.time.sleep(cfg.sensor_poll_interval_ms * std.time.ns_per_ms);
-
-        if (loop_count >= 20) {
-            std.debug.print("Demo complete after 20 iterations\n", .{});
-            break;
-        }
     }
 
     std.debug.print("Shutting down gracefully...\n", .{});
