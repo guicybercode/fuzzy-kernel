@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const root_module = b.addModule("root", .{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
     });
 
     const exe = b.addExecutable(.{
