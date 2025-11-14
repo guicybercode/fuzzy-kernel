@@ -18,10 +18,10 @@ pub fn build(b: *std.Build) void {
     const exe = b.addExecutable(.{
         .name = "microkernel-edge",
         .root_module = root_module,
+        .target = target,
+        .optimize = optimize,
     });
     
-    exe.setTarget(target);
-    exe.setOptimizeMode(optimize);
     exe.linkLibC();
     
     b.installArtifact(exe);
