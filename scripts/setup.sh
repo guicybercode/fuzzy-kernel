@@ -2,52 +2,52 @@
 
 set -e
 
-echo "🚀 Configurando projeto Microkernel IoT Platform..."
+echo "🚀 Setting up Microkernel IoT Platform project..."
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-echo "📦 Configurando servidor (Elixir)..."
+echo "📦 Setting up server (Elixir)..."
 cd server
 
 if [ ! -d "deps" ]; then
-    echo "  Instalando dependências Elixir..."
+    echo "  Installing Elixir dependencies..."
     mix deps.get
 fi
 
-echo "  Configurando banco de dados..."
-mix ecto.create || echo "  Banco já existe ou erro (verifique PostgreSQL)"
-mix ecto.migrate || echo "  Migrations já aplicadas"
+echo "  Setting up database..."
+mix ecto.create || echo "  Database already exists or error (check PostgreSQL)"
+mix ecto.migrate || echo "  Migrations already applied"
 
-echo "  Compilando assets..."
+echo "  Building assets..."
 mix assets.setup || true
 mix assets.build || true
 
 cd ..
 
-echo "📦 Configurando edge (Zig)..."
+echo "📦 Setting up edge (Zig)..."
 cd edge
 
 if [ ! -d "zig-cache" ]; then
-    echo "  Compilando edge..."
-    zig build || echo "  ⚠️  Compilação pode falhar se bibliotecas C não estiverem instaladas"
+    echo "  Building edge..."
+    zig build || echo "  ⚠️  Build may fail if C libraries are not installed"
 fi
 
 cd ..
 
-echo "🐳 Iniciando serviços (Docker)..."
+echo "🐳 Starting Docker services..."
 if command -v docker-compose &> /dev/null; then
-    docker-compose up -d || echo "  ⚠️  Docker Compose pode não estar configurado"
+    docker-compose up -d || echo "  ⚠️  Docker Compose may not be configured"
 else
-    echo "  ⚠️  docker-compose não encontrado"
+    echo "  ⚠️  docker-compose not found"
 fi
 
 echo ""
-echo "✅ Configuração concluída!"
+echo "✅ Setup completed!"
 echo ""
-echo "Para iniciar o servidor:"
+echo "To start the server:"
 echo "  cd server && mix phx.server"
 echo ""
-echo "Para compilar o edge:"
+echo "To build the edge:"
 echo "  cd edge && zig build"
 

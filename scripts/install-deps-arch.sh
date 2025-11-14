@@ -2,9 +2,9 @@
 
 set -e
 
-echo "🔧 Instalando dependências para Arch Linux..."
+echo "🔧 Installing dependencies for Arch Linux..."
 
-echo "📦 Instalando pacotes do sistema..."
+echo "📦 Installing system packages..."
 sudo pacman -S --needed \
     zig \
     elixir \
@@ -21,12 +21,12 @@ sudo pacman -S --needed \
     mbedtls \
     openssl
 
-echo "📦 Instalando dependências Zig (mbedTLS, wasmtime, TensorFlow Lite)..."
-echo "⚠️  Nota: Estas bibliotecas precisam ser compiladas manualmente ou instaladas via AUR"
+echo "📦 Installing Zig dependencies (mbedTLS, wasmtime, TensorFlow Lite)..."
+echo "⚠️  Note: These libraries need to be compiled manually or installed via AUR"
 
-echo "✅ Dependências do sistema instaladas!"
+echo "✅ System dependencies installed!"
 echo ""
-echo "Para compilar as bibliotecas C necessárias:"
+echo "To compile the required C libraries:"
 echo "  - mbedTLS: https://github.com/Mbed-TLS/mbedtls"
 echo "  - wasmtime: https://github.com/bytecodealliance/wasmtime"
 echo "  - TensorFlow Lite: https://www.tensorflow.org/lite/guide/build_cmake"

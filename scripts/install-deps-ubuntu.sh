@@ -2,12 +2,12 @@
 
 set -e
 
-echo "🔧 Instalando dependências para Ubuntu/Debian..."
+echo "🔧 Installing dependencies for Ubuntu/Debian..."
 
-echo "📦 Atualizando pacotes..."
+echo "📦 Updating packages..."
 sudo apt-get update
 
-echo "📦 Instalando pacotes do sistema..."
+echo "📦 Installing system packages..."
 sudo apt-get install -y \
     zig \
     elixir \
@@ -24,12 +24,12 @@ sudo apt-get install -y \
     libssl-dev \
     curl
 
-echo "📦 Instalando dependências Zig (mbedTLS, wasmtime, TensorFlow Lite)..."
-echo "⚠️  Nota: Estas bibliotecas precisam ser compiladas manualmente"
+echo "📦 Installing Zig dependencies (mbedTLS, wasmtime, TensorFlow Lite)..."
+echo "⚠️  Note: These libraries need to be compiled manually"
 
-echo "✅ Dependências do sistema instaladas!"
+echo "✅ System dependencies installed!"
 echo ""
-echo "Para compilar as bibliotecas C necessárias:"
+echo "To compile the required C libraries:"
 echo "  - mbedTLS: https://github.com/Mbed-TLS/mbedtls"
 echo "  - wasmtime: https://github.com/bytecodealliance/wasmtime"
 echo "  - TensorFlow Lite: https://www.tensorflow.org/lite/guide/build_cmake"
