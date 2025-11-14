@@ -417,7 +417,3 @@ For questions and support, please open an issue on GitHub.
 > *But seek first his kingdom and his righteousness, and all these things will be given to you as well.*
 > 
 > *Matthew 6:33*
-
-# fuzzy-kernel
-# fuzzy-kernel
-# fuzzy-kernel
