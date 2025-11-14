@@ -65,7 +65,12 @@ defmodule Microkernel.MixProject do
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.30", only: :dev, runtime: false},
       {:oban, "~> 2.17"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:prometheus_ex, "~> 3.1"},
+      {:prometheus_phoenix, "~> 1.3"},
+      {:prometheus_plugs, "~> 1.1"},
+      {:prometheus_ecto, "~> 1.1"},
+      {:open_api_spex, "~> 3.18"}
     ]
   end
 

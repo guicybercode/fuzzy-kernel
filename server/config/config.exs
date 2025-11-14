@@ -51,5 +51,10 @@ config :oban,
      ]}
   ]
 
+config :prometheus, Microkernel.PrometheusExporter,
+  path: "/metrics",
+  format: :text,
+  registry: :default
+
 import_config "#{config_env()}.exs"
 

@@ -1,10 +1,11 @@
 defmodule Microkernel.Telemetry.Reading do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Microkernel.Organizations.Organization
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  schema "telemetry" do
+  schema "telemetry_readings" do
     field :device_id, :string
     field :sensor_type, :string
     field :value, :float
@@ -13,6 +14,8 @@ defmodule Microkernel.Telemetry.Reading do
     field :confidence, :float
     field :metadata, :map, default: %{}
     field :timestamp, :utc_datetime
+
+    belongs_to :organization, Organization
 
     timestamps(type: :utc_datetime)
   end

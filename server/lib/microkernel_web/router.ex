@@ -12,6 +12,7 @@ defmodule MicrokernelWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug MicrokernelWeb.Plugs.Auth
   end
 
   scope "/", MicrokernelWeb do
@@ -19,6 +20,37 @@ defmodule MicrokernelWeb.Router do
 
     live "/", DeviceLive.Index, :index
     live "/devices/:id", DeviceLive.Show, :show
+    live "/devices/:id/charts", DeviceLive.Charts, :charts
+  end
+
+  scope "/api", MicrokernelWeb.Api, as: :api do
+    pipe_through :api
+
+    resources "/devices", DeviceController, only: [:index, :show]
+    get "/devices/:device_id/telemetry", TelemetryController, :index
+    get "/devices/:device_id/telemetry/latest", TelemetryController, :latest
+    get "/devices/:device_id/telemetry/export", ExportController, :export_telemetry
+    get "/devices/export", ExportController, :export_devices
+    post "/devices/:device_id/update", OTAController, :create
+    get "/devices/:device_id/update/status", OTAController, :status
+  end
+
+  scope "/api/admin", MicrokernelWeb.Api, as: :api_admin do
+    pipe_through [:api]
+
+    resources "/api_keys", ApiKeyController, only: [:index, :create]
+    resources "/organizations", OrganizationController, only: [:index, :show, :create]
+  end
+
+  scope "/", MicrokernelWeb do
+    pipe_through :browser
+    get "/metrics", MetricsController, :index
+    get "/api/docs", SwaggerController, :swaggerui
+  end
+
+  scope "/api", MicrokernelWeb do
+    pipe_through :api
+    get "/swagger.json", SwaggerController, :swagger_json
   end
 
   if Application.compile_env(:microkernel, :dev_routes) do

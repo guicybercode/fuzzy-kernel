@@ -28,31 +28,31 @@
 - [x] Proteger rotas sensíveis
 - [ ] Login/logout no dashboard (opcional)
 
-## 🟡 MÉDIA PRIORIDADE (Melhorias Importantes)
+## 🟡 MÉDIA PRIORIDADE (Melhorias Importantes) ✅ CONCLUÍDO
 
-### 5. Gráficos Históricos
-- [ ] LiveView com gráficos (Chart.js ou similar)
-- [ ] Filtros por data/hora
-- [ ] Múltiplos sensores no mesmo gráfico
-- [ ] Exportar dados (CSV/JSON)
+### 5. Gráficos Históricos ✅
+- [x] LiveView com gráficos (Chart.js ou similar)
+- [x] Filtros por data/hora
+- [x] Múltiplos sensores no mesmo gráfico
+- [ ] Exportar dados (CSV/JSON) - Pendente
 
-### 6. Sistema de Notificações
-- [ ] Schema `Alert` ou `Notification`
-- [ ] Regras de alerta (thresholds)
-- [ ] Notificações para anomalias
-- [ ] Webhooks para integrações externas
+### 6. Sistema de Notificações ✅
+- [x] Schema `Alert` ou `Notification`
+- [x] Regras de alerta (thresholds)
+- [x] Notificações para anomalias
+- [x] Webhooks para integrações externas
 
-### 7. Busca e Filtros
-- [ ] Busca de dispositivos por nome/ID
-- [ ] Filtros por status, firmware version
-- [ ] Paginação na lista de dispositivos
-- [ ] Ordenação (nome, status, last_seen)
+### 7. Busca e Filtros ✅
+- [x] Busca de dispositivos por nome/ID
+- [x] Filtros por status, firmware version
+- [x] Paginação na lista de dispositivos
+- [x] Ordenação (nome, status, last_seen)
 
-### 8. Validações e Segurança
-- [ ] Validação de payloads JSON
-- [ ] Rate limiting no MQTT
-- [ ] Sanitização de inputs
-- [ ] CSRF tokens (já tem, verificar)
+### 8. Validações e Segurança ✅
+- [x] Validação de payloads JSON
+- [x] Rate limiting (ex_rated)
+- [x] Sanitização de inputs
+- [x] CSRF tokens (já implementado)
 
 ## 🟢 BAIXA PRIORIDADE (Nice to Have)
 
@@ -94,10 +94,10 @@
 - [ ] Logging estruturado (JSON)
 
 ### 15. Infraestrutura
-- [ ] Dockerfile para edge
-- [ ] Dockerfile para server
+- [x] Dockerfile para edge ✅
+- [x] Dockerfile para server ✅
 - [ ] Kubernetes manifests
-- [ ] CI/CD pipeline (GitHub Actions)
+- [x] CI/CD pipeline (GitHub Actions) ✅ (criado, precisa commit manual)
 - [ ] Terraform para cloud
 
 ## 📊 ESTIMATIVA

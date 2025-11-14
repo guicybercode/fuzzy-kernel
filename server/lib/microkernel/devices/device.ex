@@ -1,6 +1,7 @@
 defmodule Microkernel.Devices.Device do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Microkernel.Organizations.Organization
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -11,6 +12,8 @@ defmodule Microkernel.Devices.Device do
     field :firmware_version, :string
     field :last_seen, :utc_datetime
     field :metadata, :map, default: %{}
+
+    belongs_to :organization, Organization
 
     timestamps(type: :utc_datetime)
   end

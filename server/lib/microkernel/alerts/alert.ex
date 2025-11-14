@@ -2,6 +2,7 @@ defmodule Microkernel.Alerts.Alert do
   use Ecto.Schema
   import Ecto.Changeset
   alias Microkernel.Devices.Device
+  alias Microkernel.Organizations.Organization
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :string
@@ -16,6 +17,7 @@ defmodule Microkernel.Alerts.Alert do
     field :trigger_count, :integer, default: 0
 
     belongs_to :device, Device, foreign_key: :device_id, type: :string
+    belongs_to :organization, Organization
 
     timestamps(type: :utc_datetime)
   end
